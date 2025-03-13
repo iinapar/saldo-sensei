@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -14,7 +14,8 @@ import {
   styleUrl: './sign-in-form.component.css',
 })
 export class SignInFormComponent {
-  errorMessage: string | null = null;
+  @Output()
+  login: EventEmitter<any> = new EventEmitter();
 
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -24,9 +25,7 @@ export class SignInFormComponent {
     ]),
   });
 
-  constructor() {}
-
-  login() {
-    console.log('Login');
+  onLogin() {
+    this.login.emit(this.loginForm.value);
   }
 }
