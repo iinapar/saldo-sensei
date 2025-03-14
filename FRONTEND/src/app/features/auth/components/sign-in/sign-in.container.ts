@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { SignInFormComponent } from './sign-in-form.component';
 import { AuthenticateService } from '../../services/cognito.service';
+import { SignInData } from '../../models/sign-in-data.model';
 
 @Component({
   standalone: true,
@@ -11,7 +12,7 @@ import { AuthenticateService } from '../../services/cognito.service';
 export class SignInContainerComponent {
   constructor(private authService: AuthenticateService) {}
 
-  onLogin(loginForm: any) {
-    this.authService.login(loginForm.email, loginForm.password);
+  onSignIn(signInData: SignInData) {
+    this.authService.signIn(signInData.email, signInData.password);
   }
 }

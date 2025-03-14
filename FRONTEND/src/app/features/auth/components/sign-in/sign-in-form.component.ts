@@ -15,9 +15,9 @@ import {
 })
 export class SignInFormComponent {
   @Output()
-  login: EventEmitter<any> = new EventEmitter();
+  signIn: EventEmitter<any> = new EventEmitter();
 
-  loginForm = new FormGroup({
+  signInForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [
       Validators.required,
@@ -25,7 +25,8 @@ export class SignInFormComponent {
     ]),
   });
 
-  onLogin() {
-    this.login.emit(this.loginForm.value);
+  onSignIn() {
+    const { email, password } = this.signInForm.value;
+    this.signIn.emit({ email, password });
   }
 }
