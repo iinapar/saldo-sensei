@@ -7,7 +7,7 @@
         class="form-control"
         placeholder="Enter your first name"
         name="firstname"
-        formControlName="firstname"
+        formControlName="given_name"
         required
       />
     </div>
@@ -20,7 +20,7 @@
         class="form-control"
         placeholder="Enter your last name"
         name="lastname"
-        formControlName="lastname"
+        formControlName="family_name"
         required
       />
     </div>
@@ -54,7 +54,11 @@
 
   <div class="form-group row justify-content-center m-3">
     <div class="col-10 col-md-6">
-      <button class="btn btn-default w-100 p-3" (click)="signUp()">
+      <button
+        class="btn btn-default w-100 p-3"
+        type="button"
+        (click)="onSignUp()"
+      >
         Sign Up
       </button>
     </div>
