@@ -7,6 +7,7 @@ import {
 } from 'amazon-cognito-identity-js';
 import { environment } from '../../../../environments/environment';
 import { Router } from '@angular/router';
+import { SignUpData } from '../models/sign-up-data.model';
 
 @Injectable({
   providedIn: 'root',
@@ -23,21 +24,22 @@ export class AuthenticateService {
   }
 
   // Sign up new user
-  signUp(
-    email: string,
-    password: string,
-    given_name: string,
-    family_name: string
-  ) {
+  signUp(signUpData: SignUpData) {
     const attributeList = [
-      new CognitoUserAttribute({ Name: 'email', Value: email }),
-      new CognitoUserAttribute({ Name: 'given_name', Value: given_name }),
-      new CognitoUserAttribute({ Name: 'family_name', Value: family_name }),
+      new CognitoUserAttribute({ Name: 'email', Value: signUpData.email }),
+      new CognitoUserAttribute({
+        Name: 'given_name',
+        Value: signUpData.given_name,
+      }),
+      new CognitoUserAttribute({
+        Name: 'family_name',
+        Value: signUpData.family_name,
+      }),
     ];
 
     this.userPool.signUp(
-      email,
-      password,
+      signUpData.email,
+      signUpData.password,
       attributeList,
       [],
       (err: any, result: any) => {
@@ -46,13 +48,16 @@ export class AuthenticateService {
         } else {
           console.log('Sign Up Success:', result);
           this.cognitoUser = result?.user || null;
-          console.log('User registered:', this.cognitoUser?.getUsername());
+          console.log('User registered:', this.cognitoUser.getUsername());
+          this.router.navigate(['/auth/confirm-sign-up'], {
+            queryParams: { email: signUpData.email },
+          });
         }
       }
     );
   }
 
-  // Confirm user
+  // Confirm new user
   confirmSignUp(email: string, code: string) {
     const userData = { Username: email, Pool: this.userPool };
     const cognitoUser = new CognitoUser(userData);
@@ -68,7 +73,7 @@ export class AuthenticateService {
   }
 
   // Login
-  login(emailaddress: any, password: any) {
+  signIn(emailaddress: any, password: any) {
     let authenticationDetails = new AuthenticationDetails({
       Username: emailaddress,
       Password: password,
@@ -89,7 +94,7 @@ export class AuthenticateService {
   }
 
   // Logout
-  logOut() {
+  signOut() {
     this.cognitoUser = this.userPool.getCurrentUser();
     if (this.cognitoUser) {
       this.cognitoUser.signOut();
