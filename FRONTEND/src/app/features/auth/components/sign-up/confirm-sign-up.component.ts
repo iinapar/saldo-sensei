@@ -21,6 +21,9 @@ export class ConfirmSignUpComponent {
   @Output()
   confirmSignUp: EventEmitter<any> = new EventEmitter();
 
+  @Output()
+  resendCode: EventEmitter<any> = new EventEmitter();
+
   confirmSignUpForm = new FormGroup({
     code: new FormControl('', [Validators.required]),
   });
@@ -29,5 +32,9 @@ export class ConfirmSignUpComponent {
     const { code } = this.confirmSignUpForm.value;
     const email = this.email;
     this.confirmSignUp.emit({ email, code });
+  }
+
+  onResendCode() {
+    this.resendCode.emit(this.email);
   }
 }

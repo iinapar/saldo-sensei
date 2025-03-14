@@ -13,7 +13,7 @@ import { SignUpData } from '../../models/sign-up-data.model';
 })
 export class SignUpContainerComponent {
   signUpView: 'SignUpForm' | 'ConfirmForm' = 'SignUpForm';
-  email: string = '';
+  email: string = 'esim@mail.com';
 
   constructor(private authService: AuthenticateService) {}
 
@@ -25,5 +25,9 @@ export class SignUpContainerComponent {
 
   onConfirmSignUp(confirmData: any) {
     this.authService.confirmSignUp(confirmData);
+  }
+
+  onResendCode() {
+    this.authService.resendConfirmationCode(this.email);
   }
 }

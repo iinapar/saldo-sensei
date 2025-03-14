@@ -1,6 +1,6 @@
 <div class="text-center p-4">
   <h2>Confirm your email</h2>
-  <p>Please enter the verification code that was sent to your email address.</p>
+  <p>Enter confirmation code from {{ email }}</p>
 </div>
 
 <form [formGroup]="confirmSignUpForm">
@@ -25,3 +25,11 @@
     </div>
   </div>
 </form>
+<div class="text-center p-3">
+  <small>
+    Didn't get the code?
+    <a (click)="onResendCode()" style="cursor: pointer; color: blue"
+      >Resend it here.</a
+    >
+  </small>
+</div>

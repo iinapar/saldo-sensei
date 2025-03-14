@@ -56,7 +56,6 @@ export class AuthenticateService {
 
   // Confirm new user
   confirmSignUp(confirmData: any) {
-    console.log('data servicellä:', confirmData);
     const userData = { Username: confirmData.email, Pool: this.userPool };
     const cognitoUser = new CognitoUser(userData);
 
@@ -67,6 +66,28 @@ export class AuthenticateService {
         console.log('Confirm Success:', result);
         this.router.navigate(['/auth/sign-in']);
       }
+    });
+  }
+
+  // Resend confirmation code
+  resendConfirmationCode(email: string) {
+    const userData = {
+      Username: email,
+      Pool: this.userPool,
+    };
+
+    const cognitoUser = new CognitoUser(userData);
+
+    return new Promise((resolve, reject) => {
+      cognitoUser.resendConfirmationCode((err, result) => {
+        if (err) {
+          console.error('Resend Code Error:', err);
+          reject(err);
+        } else {
+          console.log('Resend Code Success:', result);
+          resolve(result);
+        }
+      });
     });
   }
 
