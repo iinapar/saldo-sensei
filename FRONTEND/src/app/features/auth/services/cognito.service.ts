@@ -49,20 +49,18 @@ export class AuthenticateService {
           console.log('Sign Up Success:', result);
           this.cognitoUser = result?.user || null;
           console.log('User registered:', this.cognitoUser.getUsername());
-          this.router.navigate(['/auth/confirm-sign-up'], {
-            queryParams: { email: signUpData.email },
-          });
         }
       }
     );
   }
 
   // Confirm new user
-  confirmSignUp(email: string, code: string) {
-    const userData = { Username: email, Pool: this.userPool };
+  confirmSignUp(confirmData: any) {
+    console.log('data servicellä:', confirmData);
+    const userData = { Username: confirmData.email, Pool: this.userPool };
     const cognitoUser = new CognitoUser(userData);
 
-    cognitoUser.confirmRegistration(code, true, (err, result) => {
+    cognitoUser.confirmRegistration(confirmData.code, true, (err, result) => {
       if (err) {
         console.error('Confirm Error:', err);
       } else {

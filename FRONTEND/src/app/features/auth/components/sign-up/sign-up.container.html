@@ -1,4 +1,13 @@
 <div class="text-center p-4">
   <h2>Sign up to Saldo Sensei</h2>
 </div>
+
+@switch (signUpView) { @case ('SignUpForm') {
 <sign-up-form (signUp)="onSignUp($event)"></sign-up-form>
+} @case ('ConfirmForm') {
+
+<confirm-sign-up
+  (confirmSignUp)="onConfirmSignUp($event)"
+  [email]="email"
+></confirm-sign-up>
+} }
