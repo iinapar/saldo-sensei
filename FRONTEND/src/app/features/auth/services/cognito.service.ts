@@ -103,7 +103,7 @@ export class AuthenticateService {
 
     this.cognitoUser.authenticateUser(authenticationDetails, {
       onSuccess: (result: any) => {
-        this.router.navigate(['/']);
+        this.router.navigate(['/dashboard']);
         console.log('Success Results : ', result);
       },
       onFailure: (error: any) => {
