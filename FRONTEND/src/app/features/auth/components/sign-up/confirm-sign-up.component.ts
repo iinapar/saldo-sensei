@@ -24,6 +24,8 @@ export class ConfirmSignUpComponent {
   @Output()
   resendCode: EventEmitter<any> = new EventEmitter();
 
+  resendCodeAlert: boolean = false;
+
   confirmSignUpForm = new FormGroup({
     code: new FormControl('', [Validators.required]),
   });
@@ -36,5 +38,9 @@ export class ConfirmSignUpComponent {
 
   onResendCode() {
     this.resendCode.emit(this.email);
+    this.resendCodeAlert = true;
+    setTimeout(() => {
+      this.resendCodeAlert = false;
+    }, 5000);
   }
 }

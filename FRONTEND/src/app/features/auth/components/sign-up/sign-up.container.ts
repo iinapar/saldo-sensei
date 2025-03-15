@@ -13,7 +13,7 @@ import { SignUpData } from '../../models/sign-up-data.model';
 })
 export class SignUpContainerComponent {
   signUpView: 'SignUpForm' | 'ConfirmForm' = 'SignUpForm';
-  email: string = 'esim@mail.com';
+  email: string = '';
 
   constructor(private authService: AuthenticateService) {}
 
