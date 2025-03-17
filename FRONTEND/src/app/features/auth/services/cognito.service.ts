@@ -8,6 +8,7 @@ import {
 import { environment } from '../../../../environments/environment';
 import { Router } from '@angular/router';
 import { SignUpData } from '../models/sign-up-data.model';
+import { from, map, Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -119,5 +120,36 @@ export class AuthenticateService {
       this.cognitoUser.signOut();
       this.router.navigate(['auth/sign-in']);
     }
+  }
+
+  // Get the current authenticated user
+  getCurrentUser(): Observable<CognitoUser | null> {
+    return of(this.userPool.getCurrentUser());
+  }
+
+  // Get the current user session
+  getCurrentUserSession(): Promise<any> {
+    const currentUser = this.userPool.getCurrentUser();
+
+    if (!currentUser) {
+      return Promise.resolve(null);
+    }
+
+    return new Promise((resolve, reject) => {
+      currentUser.getSession((err: any, session: any) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(session);
+        }
+      });
+    });
+  }
+
+  // Check if the user session is valid
+  isSessionValid(): Observable<boolean> {
+    return from(this.getCurrentUserSession()).pipe(
+      map((session) => session !== null && session.isValid())
+    );
   }
 }
