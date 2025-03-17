@@ -1,5 +1,6 @@
-<div class="text-center p-4">
-  <h2>Sign up to Saldo Sensei</h2>
+<div class="text-center m-3 pb-5">
+  <h1>Saldo Sensei</h1>
+  <h6>Your Guide to Smart Money Management</h6>
 </div>
 
 @switch (signUpView) { @case ('SignUpForm') {
@@ -12,3 +13,7 @@
   [email]="email"
 ></confirm-sign-up>
 } }
+
+<div class="text-center p-3">
+  <small>Already have an account? <a href="/auth/sign-in">Login</a></small>
+</div>
