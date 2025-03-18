@@ -1,7 +1,7 @@
 <div class="text-center m-3">
   <h4>Sign Up to Saldo Sensei</h4>
 </div>
-<form [formGroup]="signUpForm">
+<form [formGroup]="signUpForm" class="needs-validation" novalidate>
   <div class="form-group row justify-content-center m-3">
     <div class="col-10 col-md-6">
       <label for="firstname" class="form-label">First name</label>
@@ -13,6 +13,7 @@
         formControlName="given_name"
         required
       />
+      <div class="invalid-feedback">First name is required</div>
     </div>
   </div>
   <div class="form-group row justify-content-center m-3">
@@ -26,6 +27,7 @@
         formControlName="family_name"
         required
       />
+      <div class="invalid-feedback">Last name is required</div>
     </div>
   </div>
   <div class="form-group row justify-content-center m-3">
@@ -39,6 +41,12 @@
         formControlName="email"
         required
       />
+      @if (signUpForm.get('email')?.touched &&
+      signUpForm.get('email')?.hasError('required') ) {
+      <div class="invalid-feedback">Email is required</div>
+      } @else if (signUpForm.get('email')?.hasError('email')) {
+      <div class="invalid-feedback">Enter a valid email</div>
+      }
     </div>
   </div>
   <div class="form-group row justify-content-center m-3">
@@ -52,6 +60,18 @@
         formControlName="password"
         required
       />
+      @if (signUpForm.get('password')?.touched &&
+      signUpForm.get('password')?.hasError('required') ) {
+      <div class="invalid-feedback">Password is required</div>
+      } @else if (signUpForm.get('password')?.hasError('minlength')) {
+      <div class="invalid-feedback">
+        Password must be at least 8 characters long
+      </div>
+      } @else if (signUpForm.get('password')?.hasError('pattern')) {
+      <div class="invalid-feedback">
+        Password must contain at least one uppercase letter and one number
+      </div>
+      }
     </div>
   </div>
 
@@ -59,8 +79,8 @@
     <div class="col-10 col-md-6">
       <button
         class="btn btn-default w-100 p-3 mt-3"
-        type="button"
         (click)="onSignUp()"
+        [disabled]="this.signUpForm.invalid"
       >
         Sign Up
       </button>

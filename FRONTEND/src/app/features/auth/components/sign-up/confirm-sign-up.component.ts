@@ -27,7 +27,7 @@ export class ConfirmSignUpComponent {
   resendCodeAlert: boolean = false;
 
   confirmSignUpForm = new FormGroup({
-    code: new FormControl('', [Validators.required]),
+    code: new FormControl('', [Validators.required, Validators.minLength(6)]),
   });
 
   onConfirmSignUp() {

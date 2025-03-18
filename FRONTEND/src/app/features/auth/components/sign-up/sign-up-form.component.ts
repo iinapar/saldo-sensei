@@ -19,7 +19,11 @@ export class SignUpFormComponent {
 
   signUpForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required]),
+    password: new FormControl('', [
+      Validators.required,
+      Validators.minLength(8),
+      Validators.pattern(/^(?=.*[A-Z])(?=.*\d).{8,}$/),
+    ]),
     given_name: new FormControl('', [Validators.required]),
     family_name: new FormControl('', [Validators.required]),
   });
