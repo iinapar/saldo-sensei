@@ -152,4 +152,33 @@ export class AuthenticateService {
       map((session) => session !== null && session.isValid())
     );
   }
+
+  // Get user attributes
+  getUserAttributes(): Promise<{ [key: string]: string }> {
+    const user = this.userPool.getCurrentUser();
+
+    if (!user) {
+      return Promise.reject('No user found');
+    }
+
+    return new Promise((resolve, reject) => {
+      user.getSession((err: any, session: any) => {
+        if (err || !session.isValid()) {
+          reject('Invalid session');
+        } else {
+          user.getUserAttributes((err: any, attributes: any) => {
+            if (err) {
+              reject(err);
+            } else {
+              const result: { [key: string]: string } = {};
+              for (const attr of attributes) {
+                result[attr.getName()] = attr.getValue();
+              }
+              resolve(result);
+            }
+          });
+        }
+      });
+    });
+  }
 }
