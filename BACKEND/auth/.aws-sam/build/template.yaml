@@ -1,6 +1,7 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: AWS Cognito for Saldo Sensei
+Description: AWS SAM template for creating a Cognito User Pool and User Pool Client
+  for the SaldoSensei application.
 Resources:
   CognitoUserPool:
     Type: AWS::Cognito::UserPool
