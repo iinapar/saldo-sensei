@@ -1,0 +1,86 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Description: Main SAM template for SaldoSensei
+
+Resources:
+  # Include the auth stack (Cognito-related resources)
+  AuthStack:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: ./auth/template.yaml
+
+  # Include the database stack (DynamoDB tables)
+  DatabaseStack:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: ./database/template.yaml
+
+  # Shared Api for backend
+  Api:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: SaldoSenseiApi
+      StageName: prod
+      Cors:
+        AllowMethods: "'OPTIONS,GET,POST,PUT,DELETE'"
+        AllowHeaders: "'Content-Type,Authorization'"
+        AllowOrigin: "'http://localhost:4200'"
+        AllowCredentials: true
+      Auth:
+        DefaultAuthorizer: CognitoAuth
+        AddDefaultAuthorizerToCorsPreflight: false
+        ApiKeyRequired: false
+        Authorizers:
+          CognitoAuth:
+            UserPoolArn: !GetAtt AuthStack.Outputs.CognitoUserPoolArn
+
+  # Lambda-function to fetch transaction data from DynamoDB for the authenticated user
+  GetTransactionsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/getTransactions/
+      Handler: app.getTransactions
+      Runtime: nodejs20.x
+      Policies:
+        - AmazonDynamoDBReadOnlyAccess
+      Events:
+        GetTransactions:
+          Type: Api
+          Properties:
+            Path: /transactions
+            Method: GET
+            RestApiId: !Ref Api
+            Auth:
+              Authorizer: CognitoAuth
+
+  # Lambda function to handle CORS preflight OPTIONS requests for the /transactions endpoint
+  GetTransactionsOptions:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: nodejs20.x
+      Handler: app.optionsHandler
+      CodeUri: functions/getTransactions/options
+      Events:
+        Options:
+          Type: Api
+          Properties:
+            Path: /transactions
+            Method: OPTIONS
+            RestApiId: !Ref Api
+            Auth:
+              Authorizer: NONE
+
+Outputs:
+  ApiUrl:
+    Description: API Gateway base URL
+    Value: !Sub 'https://${Api}.execute-api.${AWS::Region}.amazonaws.com/prod'
+  CognitoUserPoolId:
+    Value: !GetAtt AuthStack.Outputs.CognitoUserPoolId
+  CognitoUserPoolClientId:
+    Value: !GetAtt AuthStack.Outputs.CognitoUserPoolClientId
+  TransactionsTableName:
+    Value: !GetAtt DatabaseStack.Outputs.TransactionsTableName
+  CognitoUserPoolArn:
+    Description: 'UserPool ARN for use in API Authorizer'
+    Value: !GetAtt AuthStack.Outputs.CognitoUserPoolArn
