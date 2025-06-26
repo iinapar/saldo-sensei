@@ -181,4 +181,24 @@ export class AuthenticateService {
       });
     });
   }
+
+  // Get user IdToken
+  getIdToken(): Promise<string | null> {
+    const currentUser = this.userPool.getCurrentUser();
+
+    if (!currentUser) {
+      return Promise.resolve(null);
+    }
+
+    return new Promise((resolve, reject) => {
+      currentUser.getSession((err: any, session: any) => {
+        if (err || !session?.isValid()) {
+          reject('No valid session');
+        } else {
+          const token = session.getIdToken().getJwtToken();
+          resolve(token);
+        }
+      });
+    });
+  }
 }
